@@ -97,7 +97,7 @@ const NavMenu = styled.div`
 
     &::before {
       content: "";
-      background-color: rgb(249, 249, 249);
+      background-color: currentColor;
       border-radius: 0 0 4px 4px;
       position: absolute;
       width: 0;
