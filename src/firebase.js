@@ -1,5 +1,7 @@
+import firebase from "firebase";
+
 const firebaseConfig = {
-  apiKey: process.env.API_KEY,
+  apiKey: import.meta.env.VITE_REACT_APP_API_KEY,
   authDomain: "disney-plus-clone-a27d4.firebaseapp.com",
   projectId: "disney-plus-clone-a27d4",
   storageBucket: "disney-plus-clone-a27d4.appspot.com",
