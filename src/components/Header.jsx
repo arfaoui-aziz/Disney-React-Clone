@@ -1,14 +1,39 @@
 import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
 import styled from "styled-components";
+import {
+  setSignOutState,
+  setUserLoginDetails,
+  selectActiveUser,
+} from "../features/user/userSlice";
 import { auth, provider } from "../firebase";
+
 const Header = () => {
+  const dispatch = useDispatch();
+  const history = useHistory();
+  const { name, email, photo } = useSelector(selectActiveUser);
+  console.log(name, email, photo);
+
   const handleAuth = () => {
     auth
       .signInWithPopup(provider)
-      .then((result) => {})
+      .then((result) => {
+        setUser(result.user);
+      })
       .catch((error) => {
         console.log(error);
       });
+  };
+
+  const setUser = (user) => {
+    dispatch(
+      setUserLoginDetails({
+        name: user.displayName,
+        email: user.email,
+        photo: user.photoURL,
+      })
+    );
   };
 
   return (
@@ -16,33 +41,41 @@ const Header = () => {
       <Logo>
         <img src="src/assets/images/logo.svg" alt="Logo Disney+" />
       </Logo>
-      <NavMenu>
-        <a href="/home">
-          <img src="src/assets/images/home-icon.svg" alt="HOME" />
-          <span>HOME</span>
-        </a>
-        <a>
-          <img src="src/assets/images/search-icon.svg" alt="SEARCH" />
-          <span>SEARCH</span>
-        </a>
-        <a>
-          <img src="src/assets/images/watchlist-icon.svg" alt="WATCHLIST" />
-          <span>WATCHLIST</span>
-        </a>
-        <a>
-          <img src="src/assets/images/original-icon.svg" alt="ORIGINALS" />
-          <span>ORIGINALS</span>
-        </a>
-        <a>
-          <img src="src/assets/images/movie-icon.svg" alt="MOVIES" />
-          <span>MOVIES</span>
-        </a>
-        <a>
-          <img src="src/assets/images/series-icon.svg" alt="SERIES" />
-          <span>SERIES</span>
-        </a>
-      </NavMenu>
-      <LoginButton onClick={handleAuth}>Login</LoginButton>
+
+      {!name ? (
+        <LoginButton onClick={handleAuth}>Login</LoginButton>
+      ) : (
+        <>
+          <NavMenu>
+            <a href="/home">
+              <img src="src/assets/images/home-icon.svg" alt="HOME" />
+              <span>HOME</span>
+            </a>
+            <a>
+              <img src="src/assets/images/search-icon.svg" alt="SEARCH" />
+              <span>SEARCH</span>
+            </a>
+            <a>
+              <img src="src/assets/images/watchlist-icon.svg" alt="WATCHLIST" />
+              <span>WATCHLIST</span>
+            </a>
+            <a>
+              <img src="src/assets/images/original-icon.svg" alt="ORIGINALS" />
+              <span>ORIGINALS</span>
+            </a>
+            <a>
+              <img src="src/assets/images/movie-icon.svg" alt="MOVIES" />
+              <span>MOVIES</span>
+            </a>
+            <a>
+              <img src="src/assets/images/series-icon.svg" alt="SERIES" />
+              <span>SERIES</span>
+            </a>
+          </NavMenu>
+
+          <UserImg src={photo} alt="user Image" />
+        </>
+      )}
     </NavBar>
   );
 };
@@ -79,7 +112,7 @@ const NavMenu = styled.div`
   align-items: center;
   margin-left: 40px;
   /* margin-top: 15px; */
-  margin-right: auto;
+
   a {
     display: flex;
     align-items: center;
@@ -93,6 +126,8 @@ const NavMenu = styled.div`
     &:hover span::before {
       width: 100%;
       opacity: 1;
+      transform: scale(1);
+      transform-origin: left;
     }
   }
 
@@ -112,6 +147,7 @@ const NavMenu = styled.div`
       position: absolute;
       width: 0;
       opacity: 0;
+      transform: scale(0);
       height: 2px;
       bottom: -6px;
       left: 0;
@@ -138,12 +174,19 @@ const LoginButton = styled.button`
   border-radius: 4px;
   cursor: pointer;
   transition: all 0.2s ease-out;
+  margin-left: auto;
 
   &:hover {
     background-color: #f9f9f9;
     color: #000;
     border-color: transparent;
   }
+`;
+
+const UserImg = styled.img`
+  height: 70%;
+  border-radius: 50%;
+  margin-left: auto;
 `;
 
 export default Header;
