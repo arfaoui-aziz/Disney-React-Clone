@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import styled from "styled-components";
@@ -9,21 +9,40 @@ import {
 } from "../features/user/userSlice";
 import { auth, provider } from "../firebase";
 
-const Header = () => {
+const Header = (props) => {
   const dispatch = useDispatch();
-  const history = useHistory();
+  let history = useHistory();
   const { name, email, photo } = useSelector(selectActiveUser);
-  console.log(name, email, photo);
+
+  useEffect(() => {
+    auth.onAuthStateChanged(async (user) => {
+      if (user) {
+        setUser(user);
+
+        history.push("/home");
+      }
+    });
+  }, [name]);
 
   const handleAuth = () => {
-    auth
-      .signInWithPopup(provider)
-      .then((result) => {
-        setUser(result.user);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    if (!name) {
+      auth
+        .signInWithPopup(provider)
+        .then((result) => {
+          setUser(result.user);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } else {
+      auth
+        .signOut()
+        .then(() => {
+          dispatch(setSignOutState());
+          history.push("/");
+        })
+        .catch((error) => console.log(error.message));
+    }
   };
 
   const setUser = (user) => {
@@ -73,7 +92,13 @@ const Header = () => {
             </a>
           </NavMenu>
 
-          <UserImg src={photo} alt="user Image" />
+          <SignOut>
+            <UserImg src={photo} alt="user Image" />
+            <ArrowUp />
+            <DropDown>
+              <span onClick={handleAuth}>SignOut</span>
+            </DropDown>
+          </SignOut>
         </>
       )}
     </NavBar>
@@ -184,9 +209,60 @@ const LoginButton = styled.button`
 `;
 
 const UserImg = styled.img`
-  height: 70%;
+  height: 100%;
+  display: block;
   border-radius: 50%;
+`;
+
+const DropDown = styled.div`
+  position: absolute;
+  top: 48px;
+  background: rgb(19, 19, 19);
+  border: 1px solid rgba(151, 151, 151, 0.34);
+  border-radius: 4px;
+  box-shadow: rgb(0 0 0 /50%) 0 0 18px 0;
+  padding: 10px 20px;
+  font-size: 14px;
+  letter-spacing: 3px;
+  opacity: 0;
+  transition: background 0.2s;
+  margin-top: 13px;
+  &:hover {
+    background-color: rgba(19, 19, 19, 0.726);
+  }
+`;
+
+const ArrowUp = styled.div`
+  width: 0;
+  height: 0;
+  border-left: 7px solid transparent;
+  border-right: 7px solid transparent;
+  margin-top: 6px;
+  border-bottom: 7px solid #f9f9f9;
+  opacity: 0;
+`;
+
+const SignOut = styled.div`
+  position: relative;
+  height: 48px;
+  width: 48px;
   margin-left: auto;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+
+  &:hover {
+    ${DropDown} {
+      opacity: 1;
+      transition-duration: 1s;
+    }
+    ${ArrowUp} {
+      opacity: 1;
+      transition-duration: 0.7s;
+    }
+  }
 `;
 
 export default Header;
