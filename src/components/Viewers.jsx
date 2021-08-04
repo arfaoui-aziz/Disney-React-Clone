@@ -95,13 +95,14 @@ const Wrap = styled.div`
   }
 
   video {
-    height: 100%;
+    height: 105%;
     width: 100%;
     position: absolute;
     inset: 0;
     object-fit: cover;
     opacity: 0;
     z-index: 0;
+    top: -1px;
   }
 
   &:hover {

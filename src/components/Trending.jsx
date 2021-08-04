@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 
-export default function NewDisney() {
+export default function Trending() {
   return (
     <Container>
       <h4>New to Disney+</h4>

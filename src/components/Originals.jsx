@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 
-export default function NewDisney() {
+export default function Originals() {
   return (
     <Container>
       <h4>New to Disney+</h4>
@@ -33,6 +33,9 @@ const Content = styled.div`
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 `;
+
+
+
 
 const Wrap = styled.div`
   padding-top: 56.25%;
