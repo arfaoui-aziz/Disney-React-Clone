@@ -1,18 +1,25 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { useSelector } from "react-redux";
+import { selectNewDisney } from "../features/movie/movieSlice";
 
 export default function NewDisney() {
+  const NewDisneyMovies = useSelector(selectNewDisney);
   return (
     <Container>
       <h4>New to Disney+</h4>
 
       <Content>
-        <Wrap>
-          <Link to="/">
-            <img src="src/assets/images/viewers-pixar.png" alt="" />
-          </Link>
-        </Wrap>
+      {NewDisneyMovies &&
+          NewDisneyMovies.map((movie, i) => (
+            <Wrap key={i}>
+              {movie.id}
+              <Link to={`/detail/${movie.id}`}>
+                <img src={movie.cardImg} alt={movie.title} />
+              </Link>
+            </Wrap>
+          ))}
       </Content>
     </Container>
   );

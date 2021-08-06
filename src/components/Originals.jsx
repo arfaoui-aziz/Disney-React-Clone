@@ -1,18 +1,24 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-
+import { useSelector } from "react-redux";
+import { selectOriginal } from "../features/movie/movieSlice";
 export default function Originals() {
+  const originalsMovies = useSelector(selectOriginal);
   return (
     <Container>
-      <h4>New to Disney+</h4>
+      <h4>Originals</h4>
 
       <Content>
-        <Wrap>
-          <Link to="/">
-            <img src="src/assets/images/viewers-pixar.png" alt="" />
-          </Link>
-        </Wrap>
+        {originalsMovies &&
+          originalsMovies.map((movie, i) => (
+            <Wrap key={i}>
+              {movie.id}
+              <Link to={`/detail/${movie.id}`}>
+                <img src={movie.cardImg} alt={movie.title} />
+              </Link>
+            </Wrap>
+          ))}
       </Content>
     </Container>
   );
@@ -33,9 +39,6 @@ const Content = styled.div`
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 `;
-
-
-
 
 const Wrap = styled.div`
   padding-top: 56.25%;

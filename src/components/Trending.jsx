@@ -1,18 +1,25 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-
+import { useSelector } from "react-redux";
+import { selectTrending } from "../features/movie/movieSlice";
 export default function Trending() {
+  const TrendingMovies = useSelector(selectTrending);
+
   return (
     <Container>
-      <h4>New to Disney+</h4>
+      <h4>Trending</h4>
 
       <Content>
-        <Wrap>
-          <Link to="/">
-            <img src="src/assets/images/viewers-pixar.png" alt="" />
-          </Link>
-        </Wrap>
+        {TrendingMovies &&
+          TrendingMovies.map((movie, i) => (
+            <Wrap key={i}>
+              {movie.id}
+              <Link to={`/detail/${movie.id}`}>
+                <img src={movie.cardImg} alt={movie.title} />
+              </Link>
+            </Wrap>
+          ))}
       </Content>
     </Container>
   );
