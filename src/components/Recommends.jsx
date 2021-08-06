@@ -1,17 +1,25 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { useSelector } from "react-redux";
+import { selectRecommend } from "../features/movie/movieSlice";
+
 export default function Recommends() {
+  const recommendedMovies = useSelector(selectRecommend);
   return (
     <Container>
       <h4>Recomended for you</h4>
 
       <Content>
-        <Wrap>
-          <Link to="/">
-            <img src="src/assets/images/viewers-pixar.png" alt="" />
-          </Link>
-        </Wrap>
+        {recommendedMovies &&
+          recommendedMovies.map((movie, i) => (
+            <Wrap key={i}>
+              {movie.id}
+              <Link to={`/detail/${movie.id}`}>
+                <img src={movie.cardImg} alt={movie.title} />
+              </Link>
+            </Wrap>
+          ))}
       </Content>
     </Container>
   );
@@ -48,11 +56,11 @@ const Wrap = styled.div`
     inset: 0px;
     display: block;
     height: 100%;
+    width: 100%;
     object-fit: cover;
     opacity: 1;
     position: absolute;
     transition: opacity 500ms ease-in-out 0s;
-    width: 100%;
     z-index: 1;
     top: 0;
   }

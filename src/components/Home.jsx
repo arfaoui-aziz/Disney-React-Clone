@@ -25,7 +25,6 @@ const Home = (props) => {
         switch (doc.data().type) {
           case "recommend":
             recommends = [...recommends, { id: doc.id, ...doc.data() }];
-            console.log(recommends);
             break;
           case "new":
             newDisney = [...newDisney, { id: doc.id, ...doc.data() }];
@@ -38,16 +37,15 @@ const Home = (props) => {
             break;
         }
       });
+      dispatch(
+        setMovies({
+          recommend: recommends,
+          newDisney,
+          original: originals,
+          trending,
+        })
+      );
     });
-
-    dispatch(
-      setMovies({
-        recommend: recommends,
-        newDisney,
-        original: originals,
-        trending,
-      })
-    );
   }, [name]);
 
   return (
