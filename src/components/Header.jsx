@@ -9,7 +9,7 @@ import {
 } from "../features/user/userSlice";
 import { auth, provider } from "../firebase";
 
-const Header = (props) => {
+const Header = () => {
   const dispatch = useDispatch();
   let history = useHistory();
   const { name, email, photo } = useSelector(selectActiveUser);
@@ -18,8 +18,7 @@ const Header = (props) => {
     auth.onAuthStateChanged(async (user) => {
       if (user) {
         setUser(user);
-
-        history.push("/home");
+        history?.push("/home");
       }
     });
   }, [name]);
@@ -39,7 +38,7 @@ const Header = (props) => {
         .signOut()
         .then(() => {
           dispatch(setSignOutState());
-          history.push("/");
+          history?.go("/");
         })
         .catch((error) => console.log(error.message));
     }
